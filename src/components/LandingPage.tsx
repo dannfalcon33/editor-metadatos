@@ -14,7 +14,8 @@ import {
   ChevronDown,
   Lock,
   Zap,
-  CheckCircle2
+  CheckCircle2,
+  Globe
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -30,6 +31,10 @@ export default function LandingPage() {
     {
       q: "¿Mis archivos de audio o portadas se suben a algún servidor?",
       a: "Absolutamente no. Toda la decodificación, edición de etiquetas ID3v2.3 y la codificación final se realiza de manera local en tu navegador utilizando TypeScript. Tus archivos nunca salen de tu ordenador."
+    },
+    {
+      q: "¿De dónde se descargan los metadatos y portadas automáticas?",
+      a: "Utilizamos la API de iTunes para realizar búsquedas instantáneas y seguras basadas en el nombre del archivo MP3 que cargues, permitiéndote descargar metadatos precisos e imágenes de portada en alta definición directamente en tu navegador."
     },
     {
       q: "¿Qué metadatos puedo editar?",
@@ -48,9 +53,9 @@ export default function LandingPage() {
       desc: "Procesamiento 100% local en tu navegador. Tus archivos de música y fotos nunca viajan por internet."
     },
     {
-      icon: <Zap className="w-6 h-6 text-indigo-400" />,
-      title: "Velocidad Instantánea",
-      desc: "Al ejecutarse directamente en la CPU local, las etiquetas e imágenes se incrustan en milisegundos sin tiempos de carga."
+      icon: <Globe className="w-6 h-6 text-amber-400 animate-pulse" />,
+      title: "Búsqueda Inteligente en Línea",
+      desc: "Busca metadatos y portadas en alta definición de forma automática basándose en el nombre de tu archivo MP3."
     },
     {
       icon: <Music className="w-6 h-6 text-pink-400" />,

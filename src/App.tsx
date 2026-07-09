@@ -22,6 +22,8 @@ import AudioPlayer from './components/AudioPlayer';
 import CoverEditor from './components/CoverEditor';
 import MetadataForm from './components/MetadataForm';
 import LandingPage from './components/LandingPage';
+import OnlineMetadataSearch from './components/OnlineMetadataSearch';
+import { cleanFilenameForSearch } from './utils/onlineLookup';
 
 export function Editor() {
   // Main File States
@@ -29,6 +31,7 @@ export function Editor() {
   const [fileName, setFileName] = useState<string>('');
   const [fileSize, setFileSize] = useState<string>('');
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [cleanedSearchQuery, setCleanedSearchQuery] = useState<string>('');
 
   // ID3 States
   const [tags, setTags] = useState({
@@ -111,6 +114,9 @@ export function Editor() {
       setOriginalFileBytes(bytes);
       setFileName(name);
       setFileSize(formatBytes(bytes.length));
+      
+      const cleanQuery = cleanFilenameForSearch(name);
+      setCleanedSearchQuery(cleanQuery);
 
       // Build safe Audio Playback URL
       const blob = new Blob([bytes], { type: 'audio/mpeg' });
@@ -255,6 +261,7 @@ export function Editor() {
     setOriginalFileBytes(null);
     setFileName('');
     setFileSize('');
+    setCleanedSearchQuery('');
     if (audioUrl) URL.revokeObjectURL(audioUrl);
     setAudioUrl(null);
     if (coverData?.objectUrl) URL.revokeObjectURL(coverData.objectUrl);
@@ -271,6 +278,37 @@ export function Editor() {
     });
     setErrorMessage(null);
     setSuccessMessage(null);
+  };
+
+  const handleApplyMetadata = (metadata: {
+    title: string;
+    artist: string;
+    album: string;
+    year: string;
+    genre: string;
+    track: string;
+    comment: string;
+    cover: { mimeType: string; data: Uint8Array; objectUrl: string } | null;
+  }) => {
+    setTags({
+      title: metadata.title,
+      artist: metadata.artist,
+      album: metadata.album,
+      year: metadata.year,
+      genre: metadata.genre,
+      track: metadata.track,
+      comment: metadata.comment,
+      lyrics: tags.lyrics
+    });
+
+    if (metadata.cover) {
+      if (coverData?.objectUrl) {
+        URL.revokeObjectURL(coverData.objectUrl);
+      }
+      setCoverData(metadata.cover);
+    }
+
+    setSuccessMessage('¡Metadatos y carátula cargados de internet aplicados con éxito!');
   };
 
   return (
@@ -599,6 +637,14 @@ export function Editor() {
                 {/* Right Column: Metadata Form & Download / Reset action buttons */}
                 <div className="lg:col-span-8 flex flex-col gap-6">
                   
+                  {/* Buscador de metadatos en línea */}
+                  {fileName && fileName !== 'cancion_demo_vacia.mp3' && (
+                    <OnlineMetadataSearch
+                      initialQuery={cleanedSearchQuery}
+                      onApplyMetadata={handleApplyMetadata}
+                    />
+                  )}
+
                   {/* The form containing title, artist, album, comments, lyrics... */}
                   <MetadataForm
                     tags={tags}
