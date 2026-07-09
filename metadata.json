@@ -1,0 +1,6 @@
+{
+  "name": "Editor de Metadatos MP3",
+  "description": "Software profesional para cargar archivos de música MP3, editar completamente sus etiquetas ID3 (título, artista, álbum, año, género, comentarios, letras) y añadir portadas personalizadas.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
